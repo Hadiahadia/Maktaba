@@ -15,8 +15,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.ElOuedUniv.maktaba.data.model.Book
 import com.ElOuedUniv.maktaba.presentation.book.BookViewModel
+import androidx.compose.ui.graphics.Color
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -24,17 +26,16 @@ fun BookListView(
     onCategoriesClick: () -> Unit = {},
     viewModel: BookViewModel = hiltViewModel()
 ) {
-    val books by viewModel.books.collectAsState()
-    val isLoading by viewModel.isLoading.collectAsState()
-    
-    // TODO: Exercise 3 - Use a single delegated state from the ViewModel
-    // val uiState by viewModel.uiState.collectAsState()
 
-    if (/* TODO: uiState.isAddingBook */ false) {
+
+
+    val uiState by viewModel.uiState.collectAsState()
+
+    if ( uiState.isAddingBook ) {
         AddBookDialog(
-            onDismiss = { /* TODO: viewModel.onAction(BookUiAction.OnDismissAddBook) */ },
+            onDismiss = { viewModel.onAction(BookUiAction.OnDismissAddBook) },
             onConfirm = { title, isbn, pages ->
-                /* TODO: viewModel.onAction(BookUiAction.OnAddBookConfirm(title, isbn, pages)) */
+                viewModel.onAction(BookUiAction.OnAddBookConfirm(title, isbn, pages))
             }
         )
     }
@@ -47,22 +48,25 @@ fun BookListView(
                     IconButton(onClick = onCategoriesClick) {
                         Icon(
                             imageVector = Icons.Default.Menu,
-                            contentDescription = "Categories"
+                            contentDescription = "Categories",
+                            tint = Color.White // نخلي أيقونة Menu بيضاء
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimaryContainer
+                    containerColor = Color(0xFFFFC0CB), // وردي بينك
+                    titleContentColor = Color.White      // الكلمة باللون الأبيض
                 )
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { 
-                /* TODO: Exercise 3 - viewModel.onAction(BookUiAction.OnAddBookClick) */
-            }) {
+            FloatingActionButton(
+                onClick = { viewModel.onAction(BookUiAction.OnAddBookClick) },
+                containerColor = Color(0xFFFFC0CB), // وردي بينك
+                contentColor = Color.White           // علامة زائد بيضاء
+            ) {
                 Icon(
-                    imageVector = androidx.compose.material.icons.Icons.Default.Add,
+                    imageVector = Icons.Default.Add,
                     contentDescription = "Add Book"
                 )
             }
@@ -73,18 +77,18 @@ fun BookListView(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            if (isLoading) {
+            if (uiState.isLoading) {
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.Center)
                 )
             } else {
-                if (books.isEmpty()) {
+                if (uiState.books.isEmpty()) {
                     EmptyBooksMessage(
                         modifier = Modifier.align(Alignment.Center)
                     )
                 } else {
                     BookList(
-                        books = books,
+                        books = uiState.books,
                         modifier = Modifier.fillMaxSize()
                     )
                 }
@@ -125,13 +129,13 @@ fun BookItem(book: Book) {
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold
             )
-            
+
             Spacer(modifier = Modifier.height(8.dp))
-            
+
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
-              ) {
+            ) {
                 Column {
                     Text(
                         text = "ISBN:",
@@ -143,7 +147,7 @@ fun BookItem(book: Book) {
                         style = MaterialTheme.typography.bodyMedium
                     )
                 }
-                
+
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
                         text = "Pages:",
@@ -184,4 +188,3 @@ fun EmptyBooksMessage(modifier: Modifier = Modifier) {
         )
     }
 }
-
