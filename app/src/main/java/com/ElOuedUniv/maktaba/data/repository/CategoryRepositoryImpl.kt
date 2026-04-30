@@ -14,17 +14,32 @@ class CategoryRepositoryImpl @Inject constructor() : CategoryRepository {
         Category(
             id = "1",
             name = "Programming",
-            description = "Books about software development and coding"
+            description = "Master the art of coding with the best programming guides and tutorials.",
+            iconRes = android.R.drawable.ic_menu_edit
         ),
         Category(
             id = "2",
             name = "Algorithms",
-            description = "Books about algorithms and data structures"
+            description = "Dive deep into data structures and complex problem-solving techniques.",
+            iconRes = android.R.drawable.ic_menu_compass
         ),
         Category(
             id = "3",
             name = "Databases",
-            description = "Books about database design and management"
+            description = "Learn how to design, manage, and scale robust database systems.",
+            iconRes = android.R.drawable.ic_menu_save
+        ),
+        Category(
+            id = "4",
+            name = "Mobile Dev",
+            description = "Build amazing Android and iOS applications with modern frameworks.",
+            iconRes = android.R.drawable.ic_menu_call
+        ),
+        Category(
+            id = "5",
+            name = "Cloud Computing",
+            description = "Explore AWS, Azure, and GCP to deploy your apps at scale.",
+            iconRes = android.R.drawable.ic_menu_share
         )
     )
 
@@ -33,7 +48,7 @@ class CategoryRepositoryImpl @Inject constructor() : CategoryRepository {
     }
     
     override fun getAllCategories(): Flow<List<Category>> = flow {
-        delay(2000) // Simulate delay
+        delay(1000) // Reduced delay for better UX
         emitAll(categoriesFlow)
     }
 

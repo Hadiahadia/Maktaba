@@ -19,6 +19,7 @@ fun NavGraph(
         navController = navController,
         startDestination = Screen.Onboarding.route
     ) {
+
         composable(Screen.Onboarding.route) {
             OnboardingView(
                 onNavigateToLibrary = {
@@ -28,7 +29,8 @@ fun NavGraph(
                 }
             )
         }
-        
+
+        // 📚 Book List
         composable(Screen.BookList.route) {
             BookListView(
                 onCategoriesClick = { navController.navigate(Screen.CategoryList.route) },
@@ -38,15 +40,18 @@ fun NavGraph(
                 }
             )
         }
-        
+
+        // 📖 Book Detail
         composable(Screen.BookDetail.route) {
             BookDetailView(onBackClick = { navController.popBackStack() })
         }
-        
+
+        // 📂 Category List
         composable(Screen.CategoryList.route) {
             CategoryListView(onBackClick = { navController.popBackStack() })
         }
-        
+
+        // ➕ Add Book
         composable(Screen.AddBook.route) {
             AddBookView(onBackClick = { navController.popBackStack() })
         }
